@@ -17,7 +17,7 @@ class SlicePanel(wx.Panel):
     def __init__(self, parent):
         """"""
 
-        wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
+        slic3rPanel = wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         ## Load STL/SVG File Button, and text field for displaying file path
@@ -66,8 +66,32 @@ class ControlPanel(wx.Panel):
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
-        txtOne = wx.TextCtrl(self, wx.ID_ANY, "")
-        txtTwo = wx.TextCtrl(self, wx.ID_ANY, "")
+
+        ## Left Control Panel
+        ## Machine Settings
+        ## X Pixels
+        xpxLb = wx.StaticText(self, 1, "X (px):")
+        xpx = wx.SpinCtrl(self,1,'0',(150,70),(60, -1))
+        ## Y Pixels
+        ypxLb = wx.StaticText(self, 1, "Y (px):")
+        ypx = wx.SpinCtrl(self,1,'0',(150,70),(60, -1))
+        ## Offset
+        offsetLb = wx.StaticText(self,1,"Offset:")
+        offset = wx.SpinCtrl(self,1,'0',(150,70),(60, -1))
+        ## Z-Max
+        zmaxLb = wx.StaticText(self,1,"Z-Max (mm):")
+        zmax = wx.SpinCtrl(self,1,'0',(150,70),(60, -1))
+
+
+        ## Right Control Panel
+        ## Projector Settings
+        ## Calibrate Checkbox
+        calibrate = wx.CheckBox(self, -1, "Calibrate")
+        ## Boundary checkbox
+        boundary = wx.CheckBox(self, -1,"Boundary")
+        ## First Layer
+        frstLayerLb = wx.StaticText(self, 1, "First Layer:")
+        firstlayer = wx.SpinCtrl(self,1,'0',(150,70),(60, -1))
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(txtOne, 0, wx.ALL, 5)
