@@ -9,7 +9,7 @@ class odysseyApp(wx.Frame):
         self.Show(True)
 
 ########################################################################
-class PrinterSettingsPanel(wx.Panel):
+class SettingsControlPanel(wx.Panel):
     """
     First Tab of GUI, Print Settings and Slicer Panel
     """
@@ -20,13 +20,37 @@ class PrinterSettingsPanel(wx.Panel):
         slic3rPanel = wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
+
+        ## Connecting The Host to the Printer itself
+        ## Connecting to Printer (BeaglbeonBlack w/ DLP-CAPE)
+        printCntLb = wx.StaticText(self, 1, "Printer Connection: ")
+        portLb = wx.StaticText(self, 1, "Port:")
+        port = wx.SpinCtrl(self, -1, '', (150,75),(60,-1))
+        atLb = wx.StaticText(self,1,"@")
+        baudrate = wx.SpinCtrl(self, -1, '', (150,75),(60,-1))
+        connect = wx.Button(self, 1,'Connect',(50,120))
+        reset = wx.Button(self,1,'Reset',(50,120))
+        disconnect = wx.Button(self,1,'Disconnect',(50,120))
+
+        ## Loading a file to work with, accepts SVG or STL files
         ## Load STL/SVG File Button, and text field for displaying file path
         loadFile = wx.Button(self, 1, 'Load File',(50,130))
         pathLabel = wx.StaticText(self, 1, "File Path:", (100,10))
         filePath = wx.TextCtrl(self, wx.ID_ANY, "")
 
+        ## Slice it!, if an STL file is loaded, this part of the interface becomes
+        ## active for slicing into SVG, Layer height in the settings must be specified
+        ## slicing handled by Slic3r CLI application, Slic3r is a dependency of Odyssey-Host
+        ## Slice To File
+        sliceToFile = wx.Button(self, 1, 'Slice to File',(50,130))
+        ## Slice To Print
+        sliceToPrint = wx.Button(self, 1, 'Slice',(50,130))
+        saveLocLb = wx.StaticText(self, 1, "Exported File Path:")
+        savePath = wx.TextCtrl(self,1,"")
+        savePathInput = wx.CheckBox(self,-1,'Save File in Same Path as Input',(15,30))
+
         ## Printer Settings
-        ## Left Side of Panel
+        ## Left Side of Options
         ## Layer height parameter
         layerLb = wx.StaticText(self, 1, "Layer Height (mm):", (100,20))
         layer = wx.TextCtrl(self, 1, "")
@@ -50,7 +74,7 @@ class PrinterSettingsPanel(wx.Panel):
         preLb = wx.StaticText(self, 1, "Pre-Lift G-Code:")
         preGcode = wx.TextCtrl(self, 1, "")
 
-        ## Right side of Panel
+        ## Right side of Options
         ## X(px) X Pixele
         xPxLb = wx.StaticText(self, 1,"X(px):")
         xPxMnu = wx.SpinCtrl(self, -1, '', (150,75),(60,-1))
@@ -69,36 +93,6 @@ class PrinterSettingsPanel(wx.Panel):
         postLb = wx.StaticText(self, 1,"Post-Lift G-Code:")
         postGcode = wx.TextCtrl(self, 1, "")
 
-        self.SetSizer(sizer)
-
-
-########################################################################
-class ControlPanel(wx.Panel):
-    """
-    This will be the first notebook tab
-    """
-    #----------------------------------------------------------------------
-    def __init__(self, parent):
-        """"""
-
-        wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
-
-        sizer = wx.BoxSizer(wx.VERTICAL)
-
-        ## Connecting to Printer (BeaglbeonBlack w/ DLP-CAPE)
-        printCntLb = wx.StaticText(self, 1, "Printer Connection: ")
-        portLb = wx.StaticText(self, 1, "Port:")
-        port = wx.SpinCtrl(self, -1, '', (150,75),(60,-1))
-        atLb = wx.StaticText(self,1,"@")
-        baudrate = wx.SpinCtrl(self, -1, '', (150,75),(60,-1))
-        connect = wx.Button(self, 1,'Connect',(50,120))
-        reset = wx.Button(self,1,'Reset',(50,120))
-        disconnect = wx.Button(self,1,'Disconnect',(50,120))
-
-        ## Load presliced SVG
-        loadFileSVG = wx.Button(self, 1, 'Load File',(50,130))
-        pathLabelSVG = wx.StaticText(self, 1, "File Path:", (100,10))
-        filePathSVG = wx.TextCtrl(self, wx.ID_ANY, "")
         ## Start a print, pause a print, stop/cancel a print
         printPart = wx.Button(self, 1,'Print',(50,120))
         pausePrint = wx.Button(self,1,'Pause',(50,120))
@@ -112,15 +106,11 @@ class ControlPanel(wx.Panel):
         sendCmd = wx.Button(self,1,'Send Command',(100,10))
         cmdBox = wx.StaticText(self,1,"")
 
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(txtOne, 0, wx.ALL, 5)
-        sizer.Add(txtTwo, 0, wx.ALL, 5)
-
         self.SetSizer(sizer)
 
 
 #######################################################################
-class SlicingPanel(wx.Panel):
+class ViewerPanel(wx.Panel):
     """
     This is the 3rd tab, for Slicing STLs into SVGs and autoloading them
     to the print queue
@@ -130,14 +120,6 @@ class SlicingPanel(wx.Panel):
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
-        ## Slice it!
-        ## Layer Height
-        layerHLb = wx.StaticText(self,1,"Layer Height (mm) :")
-        layerHeight = wx.SpinCtrl(self, -1, '', (150,75),(60,-1))
-        ## Slice To File
-        sliceToFile = wx.Button(self, 1, 'Slice to File',(50,130))
-        ## Slice To Print
-        sliceToPrint = wx.Button(self, 1, 'Slice to Print',(50,130))
 
 
         self.SetSizer(sizer)
